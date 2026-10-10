@@ -14,13 +14,123 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      study_sessions: {
+        Row: {
+          completed_at: string | null
+          duration: number
+          hyper: boolean
+          id: string
+          started_at: string
+          subject: string
+          user_id: string
+        }
+        Insert: {
+          completed_at?: string | null
+          duration: number
+          hyper?: boolean
+          id?: string
+          started_at?: string
+          subject: string
+          user_id?: string
+        }
+        Update: {
+          completed_at?: string | null
+          duration?: number
+          hyper?: boolean
+          id?: string
+          started_at?: string
+          subject?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      theme_redemptions: {
+        Row: {
+          created_at: string
+          id: string
+          theme: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          theme: string
+          user_id?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          theme?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      tutor_messages: {
+        Row: {
+          created_at: string
+          id: string
+          message: Json
+          message_id: string
+          thread_id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          message: Json
+          message_id: string
+          thread_id: string
+          user_id?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          message?: Json
+          message_id?: string
+          thread_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "tutor_messages_thread_id_fkey"
+            columns: ["thread_id"]
+            isOneToOne: false
+            referencedRelation: "tutor_threads"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      tutor_threads: {
+        Row: {
+          created_at: string
+          id: string
+          title: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          title?: string
+          user_id?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          title?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      complete_study_session: {
+        Args: { session_id: string }
+        Returns: undefined
+      }
+      redeem_study_theme: { Args: { chosen_theme: string }; Returns: undefined }
     }
     Enums: {
       [_ in never]: never
