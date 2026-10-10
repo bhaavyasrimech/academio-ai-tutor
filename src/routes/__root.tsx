@@ -12,9 +12,9 @@ import { useEffect, type ReactNode } from "react";
 
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
-import { WorkspaceProvider } from '@/components/academio/workspace-context';
-import { AppShell } from '@/components/academio/app-shell';
-import { Toaster } from 'sonner';
+import { WorkspaceProvider } from "@/components/academio/workspace-context";
+import { AppShell } from "@/components/academio/app-shell";
+import { Toaster } from "sonner";
 
 function NotFoundComponent() {
   return (
@@ -89,7 +89,10 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { name: "twitter:card", content: "summary_large_image" },
     ],
     links: [
-      { rel: 'stylesheet', href: 'https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;650;700;750;800&display=swap' },
+      {
+        rel: "stylesheet",
+        href: "https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;650;700;750;800&display=swap",
+      },
       {
         rel: "stylesheet",
         href: appCss,
@@ -123,7 +126,12 @@ function RootComponent() {
   return (
     <QueryClientProvider client={queryClient}>
       {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
-      <WorkspaceProvider><AppShell><Outlet /></AppShell><Toaster position="top-center" /></WorkspaceProvider>
+      <WorkspaceProvider>
+        <AppShell>
+          <Outlet />
+        </AppShell>
+        <Toaster position="top-center" />
+      </WorkspaceProvider>
     </QueryClientProvider>
   );
 }
