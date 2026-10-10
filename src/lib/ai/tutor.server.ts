@@ -64,11 +64,12 @@ export async function handleTutor(request: Request) {
       .update({ title: text.slice(0, 65) })
       .eq("id", threadId)
       .eq("title", "New conversation");
-    const gateway = createLovableAiGatewayProvider(aiKey, undefined, {
-      baseURL: "https://ai.gateway.lovable.dev/v1",
-    });
     let gatewayStatus = 200;
     let gatewayMessage = "";
+  const gateway = createLovableAiGatewayProvider(aiKey, undefined, {
+    baseURL: "https://ai.gateway.lovable.dev/v1",
+    onResponse:async response=>{if(!response.ok){gatewayStatus=response.status;const body=await response.clone().json().catch(()=>null);gatewayMessage=body?.message??body?.error?.message??'Your tutor is temporarily unavailable.';}},
+  });
     const math = create(all ?? {});
     const tools = {
       calculator: tool({

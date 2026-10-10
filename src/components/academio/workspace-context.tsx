@@ -126,6 +126,8 @@ export function WorkspaceProvider({ children }: { children: ReactNode }) {
       return;
     }
     if (running) return;
+    const remaining=seconds > 0 ? seconds : duration;
+    if(seconds===0)setSeconds(duration);
     let id = sessionId;
     if (user && !id) {
       const { data, error } = await supabase
@@ -141,7 +143,7 @@ export function WorkspaceProvider({ children }: { children: ReactNode }) {
       setSessionId(id);
     }
     setHyper(isHyper);
-    setDeadline(Date.now() + seconds * 1000);
+    setDeadline(Date.now() + remaining * 1000);
     setRunning(true);
   }
   function reset() {
