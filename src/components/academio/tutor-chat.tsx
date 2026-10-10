@@ -100,7 +100,9 @@ export function TutorChat({
                     return (
                       <Tool key={index} defaultOpen={false}>
                         <ToolHeader
-                          {...(part.type === 'dynamic-tool' ? {type:part.type,toolName:part.toolName} : {type:part.type})}
+                          {...(part.type === "dynamic-tool"
+                            ? { type: part.type, toolName: part.toolName }
+                            : { type: part.type })}
                           state={part.state}
                           title={
                             part.type === "tool-calculator" ? "Calculator" : "Academic reference"

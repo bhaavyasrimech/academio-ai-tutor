@@ -126,8 +126,8 @@ export function WorkspaceProvider({ children }: { children: ReactNode }) {
       return;
     }
     if (running) return;
-    const remaining=seconds > 0 ? seconds : duration;
-    if(seconds===0)setSeconds(duration);
+    const remaining = seconds > 0 ? seconds : duration;
+    if (seconds === 0) setSeconds(duration);
     let id = sessionId;
     if (user && !id) {
       const { data, error } = await supabase

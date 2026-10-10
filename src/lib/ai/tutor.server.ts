@@ -43,17 +43,15 @@ export async function handleTutor(request: Request) {
     const last = messages.at(-1);
     if (!last || last.role !== "user")
       return new Response("Please send a question", { status: 400 });
-    const { error: saveError } = await db
-      .from("tutor_messages")
-      .upsert(
-        {
-          thread_id: threadId,
-          user_id: user.user.id,
-          message_id: last.id,
-          message: JSON.parse(JSON.stringify(last)),
-        },
-        { onConflict: "thread_id,message_id" },
-      );
+    const { error: saveError } = await db.from("tutor_messages").upsert(
+      {
+        thread_id: threadId,
+        user_id: user.user.id,
+        message_id: last.id,
+        message: JSON.parse(JSON.stringify(last)),
+      },
+      { onConflict: "thread_id,message_id" },
+    );
     if (saveError) return new Response("Could not save your question", { status: 500 });
     const text = last.parts
       .filter((p) => p.type === "text")
@@ -66,10 +64,20 @@ export async function handleTutor(request: Request) {
       .eq("title", "New conversation");
     let gatewayStatus = 200;
     let gatewayMessage = "";
-  const gateway = createLovableAiGatewayProvider(aiKey, undefined, {
-    baseURL: "https://ai.gateway.lovable.dev/v1",
-    onResponse:async response=>{if(!response.ok){gatewayStatus=response.status;const body=await response.clone().json().catch(()=>null);gatewayMessage=body?.message??body?.error?.message??'Your tutor is temporarily unavailable.';}},
-  });
+    const gateway = createLovableAiGatewayProvider(aiKey, undefined, {
+      baseURL: "https://ai.gateway.lovable.dev/v1",
+      onResponse: async (response) => {
+        if (!response.ok) {
+          gatewayStatus = response.status;
+          const body = await response
+            .clone()
+            .json()
+            .catch(() => null);
+          gatewayMessage =
+            body?.message ?? body?.error?.message ?? "Your tutor is temporarily unavailable.";
+        }
+      },
+    });
     const math = create(all ?? {});
     const tools = {
       calculator: tool({
@@ -134,17 +142,15 @@ export async function handleTutor(request: Request) {
         return gatewayMessage;
       },
       onFinish: async ({ responseMessage }) => {
-        const { error } = await db
-          .from("tutor_messages")
-          .upsert(
-            {
-              thread_id: threadId,
-              user_id: user.user.id,
-              message_id: responseMessage.id,
-              message: JSON.parse(JSON.stringify(responseMessage)),
-            },
-            { onConflict: "thread_id,message_id" },
-          );
+        const { error } = await db.from("tutor_messages").upsert(
+          {
+            thread_id: threadId,
+            user_id: user.user.id,
+            message_id: responseMessage.id,
+            message: JSON.parse(JSON.stringify(responseMessage)),
+          },
+          { onConflict: "thread_id,message_id" },
+        );
         if (error) throw new Error("Your tutor reply could not be saved");
       },
     });
